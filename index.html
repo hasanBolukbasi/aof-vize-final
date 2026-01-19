@@ -17,7 +17,6 @@ body {
   min-height: 100vh;
 }
 
-/* SOL MENÜ */
 .sidebar {
   width: 220px;
   background: #1f66d1;
@@ -41,7 +40,6 @@ body {
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* İÇERİK */
 .content {
   flex: 1;
   padding: 20px;
@@ -88,10 +86,6 @@ button.action {
   cursor: pointer;
 }
 
-button.action:hover {
-  background: #1f66d1;
-}
-
 .result {
   margin-top: 16px;
   text-align: center;
@@ -99,7 +93,6 @@ button.action:hover {
   font-size: 17px;
 }
 
-/* TABLO */
 .table-wrap {
   overflow-x: auto;
 }
@@ -121,7 +114,6 @@ th, td {
   display: none;
 }
 
-/* MOBİL */
 @media (max-width: 768px) {
   .wrapper {
     flex-direction: column;
@@ -137,10 +129,6 @@ th, td {
     margin-bottom: 0;
     flex: 1;
   }
-
-  h2 {
-    font-size: 20px;
-  }
 }
 </style>
 </head>
@@ -149,7 +137,6 @@ th, td {
 
 <div class="wrapper">
 
-<!-- MENÜ -->
 <div class="sidebar">
   <button class="active" onclick="sekme('tek', this)">Tek Ders</button>
   <button onclick="sekme('cok', this)">Çoklu Ders</button>
@@ -157,7 +144,6 @@ th, td {
 
 <div class="content">
 
-<!-- TEK DERS -->
 <div id="tek" class="card">
   <h2>Tek Ders Hesaplama</h2>
 
@@ -176,7 +162,6 @@ th, td {
   <div class="result" id="tekSonuc"></div>
 </div>
 
-<!-- ÇOKLU -->
 <div id="cok" class="card hidden">
   <h2>Çoklu Ders Hesaplama</h2>
 
@@ -189,18 +174,19 @@ th, td {
         <th>Final (En Az)</th>
       </tr>
 
-      <script>
-        for (let i = 1; i <= 10; i++) {
-          document.write(`
-          <tr>
-            <td><input id="ders${i}"></td>
-            <td><input type="number" id="v${i}" oninput="satirHesap(${i})"></td>
-            <td><input type="number" id="o${i}" value="35" oninput="satirHesap(${i})"></td>
-            <td><input id="f${i}" readonly></td>
-          </tr>
-          `);
-        }
-      </script>
+<script>
+for (let i = 1; i <= 10; i++) {
+  document.write(`
+  <tr>
+    <td><input id="ders${i}"></td>
+    <td><input type="number" id="v${i}" oninput="satirHesap(${i})"></td>
+    <td><input type="number" id="o${i}" value="35" oninput="satirHesap(${i})"></td>
+    <td><input id="f${i}" readonly></td>
+  </tr>
+  `);
+}
+</script>
+
     </table>
   </div>
 
@@ -218,10 +204,22 @@ function sekme(id, btn) {
   btn.classList.add("active");
 }
 
-/* TEK DERS */
+/* === SADECE KONTROL EKLENDİ === */
+function kontrol100(...degerler) {
+  for (let d of degerler) {
+    if (d !== "" && Number(d) > 100) {
+      alert("Hiçbir sınav puanı 100’den büyük olamaz");
+      return false;
+    }
+  }
+  return true;
+}
+
 function tekHesapla() {
   let v = document.getElementById("vize").value;
   let f = document.getElementById("final").value;
+
+  if (!kontrol100(v, f)) return;
 
   v = v === "" ? 0 : Number(v);
 
@@ -232,44 +230,41 @@ function tekHesapla() {
   } else {
     const g = (35 - v * 0.3) / 0.7;
     tekSonuc.innerText =
-      g > 100 ? "Bu notlarla geçmek mümkün değil." :
-      g <= 0 ? "Finale girmeden geçiyorsunuz 🎉" :
       `Geçmek için finalden en az ${g.toFixed(2)} almalısınız.`;
   }
 }
 
-/* ÇOKLU SATIR */
 function satirHesap(i) {
   const v = document.getElementById("v"+i).value;
   const o = document.getElementById("o"+i).value;
+
+  if (!kontrol100(v, o)) return;
   if (v === "" || o === "") return;
 
   const f = (o - v * 0.3) / 0.7;
-  document.getElementById("f"+i).value =
-    f > 100 ? "—" : f <= 0 ? "0" : f.toFixed(2);
+  document.getElementById("f"+i).value = f.toFixed(2);
 }
 
-/* KAYDET / KOPYALA */
 function aktar() {
   let txt = "AÖF Finalden Alınması Gereken Notlar\n\n";
-  let sayac = 1;
+  let sira = 1;
 
   for (let i = 1; i <= 10; i++) {
-    const d = document.getElementById("ders" + i).value;
-    const v = document.getElementById("v" + i).value;
-    const f = document.getElementById("f" + i).value;
+    const d = document.getElementById("ders"+i).value;
+    const v = document.getElementById("v"+i).value;
+    const f = document.getElementById("f"+i).value;
 
     if (d || v !== "") {
-      txt += `${sayac}. Ders - ${d || "Ders"} | Vize: ${v || 0} | Final (en az): ${f}\n`;
-      sayac++;
+      txt += `${sira}. Ders - ${d || "Ders"} | Vize: ${v || 0} | Final (en az): ${f}\n`;
+      sira++;
     }
   }
 
   if (/Mobi|Android/i.test(navigator.userAgent)) {
     navigator.clipboard.writeText(txt);
-    alert("Kopyalandı 📋 Notlar uygulamasına yapıştırabilirsiniz.");
+    alert("Kopyalandı");
   } else {
-    const blob = new Blob([txt], { type: "text/plain" });
+    const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "aof-sonuclar.txt";
