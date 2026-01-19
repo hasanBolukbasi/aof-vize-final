@@ -90,7 +90,6 @@ button.action {
   margin-top: 16px;
   text-align: center;
   font-weight: bold;
-  font-size: 17px;
 }
 
 .table-wrap {
@@ -110,24 +109,19 @@ th, td {
   text-align: center;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
+/* MOBİL */
 @media (max-width: 768px) {
-  .wrapper {
-    flex-direction: column;
-  }
+  .wrapper { flex-direction: column; }
+  .sidebar { width: 100%; display: flex; gap: 10px; }
+  .sidebar button { flex: 1; margin-bottom: 0; }
 
-  .sidebar {
-    width: 100%;
-    display: flex;
-    gap: 10px;
+  #cok td:first-child input {
+    width: 110px;
   }
-
-  .sidebar button {
-    margin-bottom: 0;
-    flex: 1;
+  #cok td:not(:first-child) input {
+    width: 52px;
   }
 }
 </style>
@@ -145,17 +139,12 @@ th, td {
 <div class="content">
 
 <div id="tek" class="card">
-  <h2>AÖF Ortalama ve Final Hesaplama</h2>
+  <h2>AÖF Ortalama ve Finalden Alınması Gereken En Az Notu Hesaplama</h2>
 
-  <label>Vize Notu</label>
+  <label>Vize</label>
   <input type="number" id="vize">
 
-  <label>
-    Final Notu
-    <small style="font-weight:400">
-      (Geçmek için en az kaç almanız gerektiğini bulmak için boş bırakın)
-    </small>
-  </label>
+  <label>Final (Geçmek için alınması gereken en az notu bulmak için boş bırakın)</label>
   <input type="number" id="final">
 
   <button class="action" onclick="tekHesapla()">Hesapla</button>
@@ -163,7 +152,7 @@ th, td {
 </div>
 
 <div id="cok" class="card hidden">
-  <h2>Çoklu Ders Hesaplama</h2>
+  <h2>Çoklu Ders</h2>
 
   <div class="table-wrap">
     <table>
@@ -175,7 +164,7 @@ th, td {
       </tr>
 
 <script>
-for (let i = 1; i <= 10; i++) {
+for (let i=1;i<=10;i++) {
   document.write(`
   <tr>
     <td><input id="ders${i}"></td>
@@ -204,75 +193,75 @@ function sekme(id, btn) {
   btn.classList.add("active");
 }
 
-/* === SADECE KONTROL EKLENDİ === */
-function kontrol100(...degerler) {
-  for (let d of degerler) {
-    if (d !== "" && Number(d) > 100) {
-      alert("Hiçbir sınav puanı 100’den büyük olamaz");
-      return false;
-    }
+/* === ORTAK KONTROL === */
+function kontrol100(deger, input) {
+  if (deger > 100) {
+    alert("Hiçbir sınav puanı 100'den büyük olamaz");
+    input.value = "";
+    return false;
   }
   return true;
 }
 
+/* TEK DERS */
 function tekHesapla() {
-  let v = document.getElementById("vize").value;
-  let f = document.getElementById("final").value;
+  const vInput = document.getElementById("vize");
+  const fInput = document.getElementById("final");
 
-  if (!kontrol100(v, f)) return;
+  let v = vInput.value === "" ? 0 : Number(vInput.value);
+  let f = fInput.value;
 
-  v = v === "" ? 0 : Number(v);
+  if (!kontrol100(v, vInput)) return;
+  if (f !== "" && !kontrol100(Number(f), fInput)) return;
 
   if (f !== "") {
-    const ort = v * 0.3 + Number(f) * 0.7;
-    tekSonuc.innerText =
-      `Ortalama: ${ort.toFixed(2)} ${ort >= 35 ? "✅ Geçti" : "❌ Kaldı"}`;
+    const ort = v*0.3 + Number(f)*0.7;
+    tekSonuc.innerText = `Ortalama: ${ort.toFixed(2)} ${ort>=35?"✅ Geçti":"❌ Kaldı"}`;
   } else {
-    const g = (35 - v * 0.3) / 0.7;
+    const g = (35 - v*0.3)/0.7;
     tekSonuc.innerText =
+      g>100 ? "Bu notlarla geçmek mümkün değil." :
       `Geçmek için finalden en az ${g.toFixed(2)} almalısınız.`;
   }
 }
 
+/* ÇOKLU */
 function satirHesap(i) {
-  const v = document.getElementById("v"+i).value;
-  const o = document.getElementById("o"+i).value;
+  const vIn = document.getElementById("v"+i);
+  const oIn = document.getElementById("o"+i);
 
-  if (!kontrol100(v, o)) return;
-  if (v === "" || o === "") return;
+  if (vIn.value === "" || oIn.value === "") return;
 
-  const f = (o - v * 0.3) / 0.7;
-  document.getElementById("f"+i).value = f.toFixed(2);
+  const v = Number(vIn.value);
+  const o = Number(oIn.value);
+
+  if (!kontrol100(v, vIn)) return;
+  if (!kontrol100(o, oIn)) return;
+
+  const f = (o - v*0.3)/0.7;
+  document.getElementById("f"+i).value =
+    f>100 ? "—" : f<=0 ? "0" : f.toFixed(2);
 }
 
 function aktar() {
   let txt = "AÖF Finalden Alınması Gereken Notlar\n\n";
-  let sira = 1;
-
-  for (let i = 1; i <= 10; i++) {
-    const d = document.getElementById("ders"+i).value;
-    const v = document.getElementById("v"+i).value;
-    const f = document.getElementById("f"+i).value;
-
-    if (d || v !== "") {
-      txt += `${sira}. Ders - ${d || "Ders"} | Vize: ${v || 0} | Final (en az): ${f}\n`;
-      sira++;
+  let s=1;
+  for (let i=1;i<=10;i++) {
+    const d=document.getElementById("ders"+i).value;
+    const v=document.getElementById("v"+i).value;
+    const f=document.getElementById("f"+i).value;
+    if (d || v!=="") {
+      txt+=`${s}. Ders - ${d||"Ders"} | Vize: ${v||0} | Final: ${f}\n`;
+      s++;
     }
   }
-
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    navigator.clipboard.writeText(txt);
-    alert("Kopyalandı");
-  } else {
-    const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "aof-sonuclar.txt";
-    a.click();
-  }
+  const blob=new Blob([txt],{type:"text/plain"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="aof-sonuclar.txt";
+  a.click();
 }
 </script>
 
 </body>
 </html>
-
