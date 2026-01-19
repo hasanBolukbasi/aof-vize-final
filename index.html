@@ -111,7 +111,6 @@ th, td {
 
 .hidden { display: none; }
 
-/* MOBİL – SADECE YERLEŞİM, KUTU BOYUTU YOK */
 @media (max-width: 768px) {
   .wrapper { flex-direction: column; }
   .sidebar { width: 100%; display: flex; gap: 10px; }
@@ -235,6 +234,7 @@ function satirHesap(i) {
 function aktar() {
   let txt = "AÖF Finalden Alınması Gereken Notlar\n\n";
   let s = 1;
+
   for (let i=1;i<=10;i++) {
     const d=document.getElementById("ders"+i).value;
     const v=document.getElementById("v"+i).value;
@@ -244,14 +244,22 @@ function aktar() {
       s++;
     }
   }
-  const blob = new Blob([txt], {type:"text/plain"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "aof-sonuclar.txt";
-  a.click();
+
+  /* 📱 MOBİL: PANOYA KOPYALA */
+  if (/Mobi|Android/i.test(navigator.userAgent)) {
+    navigator.clipboard.writeText(txt);
+    alert("Kopyalandı 📋");
+  }
+  /* 🖥️ PC: TXT İNDİR */
+  else {
+    const blob = new Blob([txt], {type:"text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "aof-sonuclar.txt";
+    a.click();
+  }
 }
 </script>
 
 </body>
 </html>
-
