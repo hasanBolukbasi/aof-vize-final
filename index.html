@@ -11,106 +11,46 @@ body {
   font-family: "Segoe UI", Arial, sans-serif;
   background: linear-gradient(135deg, #eef2f7, #f9fafb);
 }
-
-.wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 220px;
-  background: #1f66d1;
-  padding: 20px;
-}
-
+.wrapper { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: #1f66d1; padding: 20px; }
 .sidebar button {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border: none;
-  border-radius: 8px;
+  width: 100%; padding: 14px; margin-bottom: 12px;
+  border: none; border-radius: 8px;
   background: rgba(255,255,255,0.9);
-  color: #1f66d1;
-  font-weight: 600;
-  cursor: pointer;
+  color: #1f66d1; font-weight: 600; cursor: pointer;
 }
-
 .sidebar button.active {
   background: #ffffff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
-
-.content {
-  flex: 1;
-  padding: 20px;
-}
-
+.content { flex: 1; padding: 20px; }
 .card {
-  max-width: 760px;
-  margin: auto;
-  background: white;
-  padding: 24px;
-  border-radius: 14px;
+  max-width: 760px; margin: auto; background: white;
+  padding: 24px; border-radius: 14px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
-
-h2 {
-  text-align: center;
-  margin-top: 0;
-}
-
-label {
-  display: block;
-  margin-top: 14px;
-  font-weight: 600;
-}
-
+h2 { text-align: center; margin-top: 0; }
+label { display: block; margin-top: 14px; font-weight: 600; }
 input, button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 6px;
-  font-size: 16px;
-  box-sizing: border-box;
-  border-radius: 8px;
+  width: 100%; padding: 12px; margin-top: 6px;
+  font-size: 16px; box-sizing: border-box; border-radius: 8px;
 }
-
-input {
-  border: 1px solid #ccc;
-}
-
+input { border: 1px solid #ccc; }
 button.action {
-  background: #2b7cff;
-  color: white;
-  border: none;
-  margin-top: 18px;
-  cursor: pointer;
+  background: #2b7cff; color: white;
+  border: none; margin-top: 18px; cursor: pointer;
 }
-
-.result {
-  margin-top: 16px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.table-wrap {
-  overflow-x: auto;
-}
-
+.result { margin-top: 16px; text-align: center; font-weight: bold; }
+.table-wrap { overflow-x: auto; }
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  min-width: 650px;
+  width: 100%; border-collapse: collapse;
+  margin-top: 10px; min-width: 650px;
 }
-
 th, td {
   border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
+  padding: 8px; text-align: center;
 }
-
 .hidden { display: none; }
-
 @media (max-width: 768px) {
   .wrapper { flex-direction: column; }
   .sidebar { width: 100%; display: flex; gap: 10px; }
@@ -122,7 +62,6 @@ th, td {
 <body>
 
 <div class="wrapper">
-
 <div class="sidebar">
   <button class="active" onclick="sekme('tek', this)">Tek Ders</button>
   <button onclick="sekme('cok', this)">Çoklu Ders</button>
@@ -132,13 +71,10 @@ th, td {
 
 <div id="tek" class="card">
   <h2>AÖF Ortalama ve Finalden Alınması Gereken En Az Notu Hesaplama</h2>
-
   <label>Vize</label>
   <input type="number" id="vize">
-
   <label>Final (Geçmek için alınması gereken en az notu bulmak için boş bırakın)</label>
   <input type="number" id="final">
-
   <button class="action" onclick="tekHesapla()">Hesapla</button>
   <div class="result" id="tekSonuc"></div>
 </div>
@@ -149,12 +85,8 @@ th, td {
   <div class="table-wrap">
     <table>
       <tr>
-        <th>Ders</th>
-        <th>Vize</th>
-        <th>Geçme</th>
-        <th>Final (En Az)</th>
+        <th>Ders</th><th>Vize</th><th>Geçme</th><th>Final (En Az)</th>
       </tr>
-
 <script>
 for (let i=1;i<=10;i++) {
   document.write(`
@@ -163,11 +95,9 @@ for (let i=1;i<=10;i++) {
     <td><input type="number" id="v${i}" oninput="satirHesap(${i})"></td>
     <td><input type="number" id="o${i}" value="35" oninput="satirHesap(${i})"></td>
     <td><input id="f${i}" readonly></td>
-  </tr>
-  `);
+  </tr>`);
 }
 </script>
-
     </table>
   </div>
 
@@ -179,83 +109,67 @@ for (let i=1;i<=10;i++) {
 
 <script>
 function sekme(id, btn) {
-  document.querySelectorAll('.card').forEach(c => c.classList.add("hidden"));
+  document.querySelectorAll('.card').forEach(c=>c.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
-  document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove("active"));
+  document.querySelectorAll('.sidebar button').forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 }
 
-function kontrol100(deger, input) {
-  if (deger > 100) {
-    alert("Hiçbir sınav puanı 100'den büyük olamaz");
-    input.value = "";
-    return false;
-  }
+function kontrol100(d,i){
+  if(d>100){ alert("Hiçbir sınav puanı 100'den büyük olamaz"); i.value=""; return false;}
   return true;
 }
 
-function tekHesapla() {
-  const vIn = document.getElementById("vize");
-  const fIn = document.getElementById("final");
-
-  let v = vIn.value === "" ? 0 : Number(vIn.value);
-  let f = fIn.value;
-
-  if (!kontrol100(v, vIn)) return;
-  if (f !== "" && !kontrol100(Number(f), fIn)) return;
-
-  if (f !== "") {
-    const ort = v*0.3 + Number(f)*0.7;
-    tekSonuc.innerText = `Ortalama: ${ort.toFixed(2)} ${ort>=35?"✅ Geçti":"❌ Kaldı"}`;
+function tekHesapla(){
+  const vIn=vize,fIn=final;
+  let v=vIn.value===""?0:Number(vIn.value);
+  let f=fIn.value;
+  if(!kontrol100(v,vIn))return;
+  if(f!==""&&!kontrol100(Number(f),fIn))return;
+  if(f!==""){
+    const o=v*0.3+Number(f)*0.7;
+    tekSonuc.innerText=`Ortalama: ${o.toFixed(2)} ${o>=35?"✅ Geçti":"❌ Kaldı"}`;
   } else {
-    const g = (35 - v*0.3)/0.7;
-    tekSonuc.innerText =
-      g>100 ? "Bu notlarla geçmek mümkün değil." :
-      `Geçmek için finalden en az ${g.toFixed(2)} almalısınız.`;
+    const g=(35-v*0.3)/0.7;
+    tekSonuc.innerText=g>100?"Bu notlarla geçmek mümkün değil.":`Geçmek için finalden en az ${g.toFixed(2)} almalısınız.`;
   }
 }
 
-function satirHesap(i) {
-  const vIn = document.getElementById("v"+i);
-  const oIn = document.getElementById("o"+i);
-  if (vIn.value === "" || oIn.value === "") return;
-
-  const v = Number(vIn.value);
-  const o = Number(oIn.value);
-
-  if (!kontrol100(v, vIn)) return;
-  if (!kontrol100(o, oIn)) return;
-
-  const f = (o - v*0.3)/0.7;
-  document.getElementById("f"+i).value =
-    f>100 ? "—" : f<=0 ? "0" : f.toFixed(2);
+function satirHesap(i){
+  const vIn=document.getElementById("v"+i);
+  const oIn=document.getElementById("o"+i);
+  if(vIn.value===""||oIn.value==="")return;
+  const v=Number(vIn.value),o=Number(oIn.value);
+  if(!kontrol100(v,vIn)||!kontrol100(o,oIn))return;
+  const f=(o-v*0.3)/0.7;
+  document.getElementById("f"+i).value=f>100?"—":f<=0?"0":f.toFixed(2);
 }
 
-function aktar() {
-  let txt = "AÖF Finalden Alınması Gereken Notlar\n\n";
-  let s = 1;
+/* ✅ SADECE BURASI DÜZELTİLDİ */
+function aktar(){
+  let txt="AÖF Finalden Alınması Gereken Notlar\n\n";
+  let s=1;
 
-  for (let i=1;i<=10;i++) {
-    const d=document.getElementById("ders"+i).value;
-    const v=document.getElementById("v"+i).value;
-    const f=document.getElementById("f"+i).value;
-    if (d || v!=="") {
-      txt += `${s}. Ders - ${d||"Ders"} | Vize: ${v||0} | Final (en az): ${f}\n`;
-      s++;
-    }
+  for(let i=1;i<=10;i++){
+    const d=document.getElementById("ders"+i).value.trim();
+    const v=document.getElementById("v"+i).value.trim();
+    const f=document.getElementById("f"+i).value.trim();
+
+    /* 👉 HEPSİ BOŞSA KESİNLİKLE EKLEME */
+    if(d==="" && v==="" && f==="") continue;
+
+    txt+=`${s}. Ders - ${d||"Ders"} | Vize: ${v||0} | Final (en az): ${f||"-"}\n`;
+    s++;
   }
 
-  /* 📱 MOBİL: PANOYA KOPYALA */
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
+  if(/Mobi|Android/i.test(navigator.userAgent)){
     navigator.clipboard.writeText(txt);
     alert("Kopyalandı 📋");
-  }
-  /* 🖥️ PC: TXT İNDİR */
-  else {
-    const blob = new Blob([txt], {type:"text/plain"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "aof-sonuclar.txt";
+  } else {
+    const blob=new Blob([txt],{type:"text/plain"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="aof-sonuclar.txt";
     a.click();
   }
 }
